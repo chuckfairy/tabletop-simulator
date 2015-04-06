@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <title>Three#js | Tabletop Simulator</title>
+
+    <script src="_js/lib/threesharp.min.js"></script>
+    <script src="_js/lib/dat.gui.min.js"></script>
+    <script src="_js/guis/GUI.js"></script>
+    <script src="_js/guis/Physics.GUI.js"></script>
+
+    <link rel="stylesheet" href="_css/app.css">
+    <link rel="stylesheet" href="_css/dat.light.css">
+
+</head>
+
+<body>
+
+<!--Webgl wrapper-->
+<div id="webGL"></div>
+
+<!-- Help Icons -->
+<div class="helpIcons">
+
+    <img data="controls" src="_assets/icons/heart.png">
+    <img data="info" src="_assets/icons/settings.png">
+
+</div>
+
+<!--Controls box-->
+<div class="controls" id="controls">
+
+    <div>
+
+        <a class="controlsClose">x</a>
+
+        <h2>Desktop Controls</h2>
+
+        <div class="controlsMap">
+
+            <div>
+                <span>Mouse</span>
+                <p>Move camera around and pointer</p>
+            </div>
+
+            <div>
+                <span>Click + Drag</span>
+                <p>Move chess piece forwards</p>
+            </div>
+
+            <div>
+                <span>Shift + Click</span>
+                <p>Move chess piece sideways</p>
+            </div>
+
+            <div>
+                <span>1-4</span>
+                <p>Change camera</p>
+            </div>
+
+        </div>
+
+        <h2>Mobile Controls</h2>
+
+        <div class="controlsMap">
+
+            <div>
+                <span>Tap</span>
+                <p>Select chess piece</p>
+            </div>
+
+            <div>
+                <span>Drag</span>
+                <p>Move chess piece forwards</p>
+            </div>
+
+            <div>
+                <span>Multi Drag</span>
+                <p>Move chess piece sideways</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--DAT GUI div-->
+<div id="gui"></div>
+
+<!--Main js-->
+<script src="_js/app.js"></script>
+
+</body>
+</html>

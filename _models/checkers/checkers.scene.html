@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<script src="http://lolita.local/~charlesabeling/threesharp/build/gamethree.min.js"></script>
+
+</head>
+
+<body>
+
+    <div id="test"></div>
+
+<script>
+
+var world = new THREE.World();
+
+window.onload = function() {
+
+    initCheckers();
+
+    world.init("test");
+    world.LaunchWorld();
+
+    saveScene();
+
+}
+
+//Checker scene
+function initCheckers() {
+
+    var checkerGeo = new THREE.CylinderGeometry(12, 12, 12, 16);
+
+    var checkerLightMaterial = new THREE.MeshLambertMaterial({ color: 0xFA0000, shading: THREE.SmoothShading });
+    var checkerDarkMaterial = new THREE.MeshLambertMaterial({ color: 0x919191, shading: THREE.SmoothShading });
+
+    var checkerMesh = new THREE.Mesh(checkerGeo, checkerLightMaterial);
+
+    //create checker mesh test if dark
+    var createChecker= function( dark ) {
+
+        var checker = checkerMesh.clone();
+
+        if ( dark ) {
+            checker.material = checkerDarkMaterial;
+        }
+
+        return checker;
+
+    };
+
+    var setChecker = (function(){
+
+        var spacingZ = [102, 140];
+
+        return function( xPos ) {
+
+            var checker = createChecker();
+            var checker2 = createChecker();
+            var checkerDark = createChecker(true);
+            var checkerDark2 = createChecker(true);
+
+            checker.position.set( xPos, 0, spacingZ[0]);
+            checker2.position.set( xPos, 0, spacingZ[1]);
+            checkerDark.position.set(xPos, 0, -(spacingZ[0]));
+            checkerDark2.position.set(xPos, 0, -(spacingZ[1]));
+
+            world.addMesh(checker);
+            world.addMesh(checker2);
+            world.addMesh(checkerDark);
+            world.addMesh(checkerDark2);
+
+        }
+
+    })();
+
+    //loop thru checker positions
+    var xPositions = [
+        -131.5, -93, -54.4, -16, 22.5, 61, 99, 138
+    ];
+
+    var xPosLength = xPositions.length;
+
+    for( var i = 0; i < xPosLength; i++ ) {
+
+        setChecker( xPositions[i] );
+
+    }
+
+}
+
+
+function saveScene() {
+
+    var postData = {
+        url: "checkers/checkers.scene",
+        json: world.sceneExportJSON()
+    };
+
+    THREE.AJAX.post("../savescene.php", "scene", postData, function(text) {
+
+        alert(text);
+
+    });
+
+}
+
+function test() {
+
+    world.init("test");
+
+
+    world.LaunchWorld();
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>

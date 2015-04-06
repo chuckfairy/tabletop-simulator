@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<script src="http://lolita.local/~charlesabeling/threesharp/build/gamethree.min.js"></script>
+
+</head>
+
+<body>
+
+<div id="test"></div>
+
+<script>
+
+var world = new THREE.World();
+
+window.onload = function() {
+
+    initCheckers();
+    world.init("test");
+    var camera = world.getCamera();
+    camera.position.set(100, 50, 50);
+    camera.lookAt(new THREE.Vector3(0,0,0));
+    camera.updateProjectionMatrix();
+    world.LaunchWorld();
+    setTimeout(function() {saveScene();}, 1000);
+
+    var controls = new THREE.OrbitControls(camera);
+
+};
+
+//Checker scene
+function initCheckers() {
+
+    var checkerGeo = new THREE.CylinderGeometry(12, 12, 12, 16);
+
+    var checkerLightMaterial = new THREE.MeshLambertMaterial({ color: 0xFA0000, shading: THREE.SmoothShading });
+    var checkerDarkMaterial = new THREE.MeshLambertMaterial({ color: 0x37473A, shading: THREE.SmoothShading });
+
+    var checkerMesh = new THREE.Mesh(checkerGeo, checkerLightMaterial);
+
+    var spacingZ = 30;
+    var startingX = [174, -25];
+
+    //create checker mesh test if dark
+    var createChecker= function( dark ) {
+
+        return checkerMesh.clone();
+
+    };
+
+    var setChecker = function( x, x2, z, dark ) {
+
+        var checker = createChecker(dark);
+
+        checker.position.set( (startingX[x]) - (x2 * spacingZ), 0, 119 - (z * spacingZ) );
+
+        var checker2 = checker.clone();
+        checker2.position.z = -checker2.position.z;
+        checker2.material = checkerDarkMaterial;
+
+        world.addMesh(checker);
+        world.addMesh(checker2);
+
+    };
+
+    var setCheckerRow = function( gridNum, boardNum ) {
+
+        var gridLength = gridNum.length;
+
+        for( var i = 0; i < gridLength; i++) {
+
+            (function(i) {
+
+                var checkerAmount = gridNum[i];
+
+                for ( var j = 0; j < checkerAmount; j++ ) {
+
+                    //var checker = createChecker();
+                    setChecker( boardNum, i, j );
+
+                }
+
+            })(i);
+
+        }
+
+    };
+
+    //loop thru checker positions
+    var positions = [
+        [4, 0, 0, 0, 3, 0],
+        [4, 0, 0, 0, 0, 2]
+    ];
+
+    var colorGrid = [
+        1, 0, 0, 1
+    ];
+
+    var xPosLength = positions.length;
+
+    for( var t = 0; t < xPosLength; t++ ) {
+
+        setCheckerRow( positions[t], t );
+
+    }
+
+    //Create die
+    var diceTextureArr = [
+        new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( "../../_assets/images/dice/1.jpg" ) }),
+        new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( "../../_assets/images/dice/2.jpg" ) }),
+        new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( "../../_assets/images/dice/3.jpg" ) }),
+        new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( "../../_assets/images/dice/4.jpg" ) }),
+        new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( "../../_assets/images/dice/5.jpg" ) }),
+        new THREE.MeshLambertMaterial( { map: THREE.ImageUtils.loadTexture( "../../_assets/images/dice/6.jpg" ) })
+    ];
+
+    var diceMaterial = new THREE.MeshFaceMaterial(diceTextureArr)
+    var diceGeo = new THREE.BoxGeometry( 12, 12, 12, 1, 1, 1 );
+    diceMesh = new THREE.Mesh( diceGeo, diceMaterial );
+
+    for( var i = 0; i < 4; i++ ) {
+
+        var diceClone = diceMesh.clone();
+        diceClone.position.z = (i * 30) - 50;
+        world.addMesh(diceClone);
+
+    }
+
+}
+
+
+function saveScene() {
+
+    var postData = {
+        url: "backgammon/backgammon.scene",
+        json: world.sceneExportJSON()
+    };
+
+    THREE.AJAX.post("../savescene.php", "scene", postData, function(text) {
+
+        console.log(text);
+
+    });
+
+}
+
+function test() {
+
+    world.init("test");
+
+
+    world.LaunchWorld();
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>
